@@ -3,6 +3,6 @@ namespace Shared
 {
     public class Paths
     {
-        public static string DATABASE = @"/Users/niko/SearchEngine/SearchEngine/seData/medium.db";
+        public static string DATABASE = @"/Users/niko/SearchEngine/SearchEngine/seData copy/medium.db";
     }
 }
