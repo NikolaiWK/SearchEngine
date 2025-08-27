@@ -11,5 +11,6 @@ namespace Shared.Model
 
         public String mCreationTime;
 
+        public int Id { get; set; }
     }
 }

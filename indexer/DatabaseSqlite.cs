@@ -162,6 +162,11 @@ namespace Indexer
             return res;
         }
 
+        internal Dictionary<int, string> GetWordMapping()
+        {
+            throw new NotImplementedException();
+        }
+
         public int DocumentCounts
         {
             get
