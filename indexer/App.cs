@@ -26,6 +26,7 @@ namespace Indexer
             Console.WriteLine($"Indexed {db.DocumentCounts} documents");
             Console.WriteLine($"Number of different words: {all.Count}");
 
+            
             // Spørg brugeren hvor mange ord der skal vises
             Console.Write("How many of the most frequent words do you want to see? ");
             if (!int.TryParse(Console.ReadLine(), out int count) || count <= 0)
@@ -34,13 +35,11 @@ namespace Indexer
                 count = 10;
             }
 
-            Console.WriteLine($"\nTop {count} most frequent words:");
-
-            int rank = 1;
-            foreach (var p in all.OrderByDescending(x => x.Value).Take(count))
+                    
+            foreach (var p in all.OrderBy(x => x.Value).Take(count))
             {
-                Console.WriteLine($"<{p.Key}, {rank}> - {p.Value}");
-                rank++;
+                Console.WriteLine($"<{p.Key}> - {p.Value} - {db.CountTotalWords(p.Value)}");
+                
             }
         }
     }

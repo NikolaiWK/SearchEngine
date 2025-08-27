@@ -12,6 +12,8 @@ namespace Indexer
         // Return the number of documents indexed in the database
         int DocumentCounts { get; }
 
+        int CountTotalWords(int id);
+
         void InsertDocument(BEDocument doc);
 
         // Insert a word in the database with id = [id] and value = [value]

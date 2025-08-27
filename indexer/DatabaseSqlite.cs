@@ -141,6 +141,25 @@ namespace Indexer
 
         }
 
+        public int CountTotalWords(int id)
+        {
+            var selectCmd = _connection.CreateCommand();
+            selectCmd.CommandText = $"SELECT count(wordId) FROM Occ where Occ.wordId = {id}";
+
+                 using (var reader = selectCmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        var count = reader.GetInt32(0);
+                        return count;
+                    }
+                }
+
+                return -1;
+           
+           
+        }   
+
         public Dictionary<string, int> GetAllWords()
         {
             Dictionary<string, int> res = new Dictionary<string, int>();
