@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+/*using Microsoft.AspNetCore.Mvc;
 using ConsoleSearch; // eksisterende namespace
 using System.Linq;
 
@@ -27,3 +27,4 @@ namespace MyProject.API
         }
     }
 }
+*/
