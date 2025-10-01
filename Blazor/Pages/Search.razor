@@ -1,0 +1,36 @@
+﻿@page "/search"
+@inject HttpClient Http
+@using Blazor.Models
+
+<h1>Search</h1>
+
+<input @bind="query" placeholder="Skriv søgeord..." />
+<button class="btn btn-primary" @onclick="DoSearch">Søg</button>
+
+@if (results != null)
+{
+    <h3>Resultater:</h3>
+    <ul>
+        @foreach (var r in results.documentHits)
+        {
+            <li>@r.document.mUrl (Hits: @r.noOfHits)</li>
+        }
+    </ul>
+}
+
+@code {
+    private string query = "";
+    private SearchResponse? results;
+
+    private async Task DoSearch()
+    {
+        try
+        {
+            results = await Http.GetFromJsonAsync<SearchResponse>($"api/search?query={query}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex);
+        }
+    }
+}
