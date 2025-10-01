@@ -4,7 +4,7 @@ namespace MyProject.API;
 
 
     [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class SearchController : ControllerBase
 {
     private readonly SearchLogic _searchLogic;

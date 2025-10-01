@@ -4,33 +4,57 @@
 
 <h1>Search</h1>
 
-<input @bind="query" placeholder="Skriv søgeord..." />
-<button class="btn btn-primary" @onclick="DoSearch">Søg</button>
+<div class="mb-3">
+    <input @bind="query" class="form-control" placeholder="Skriv søgeord..." />
+</div>
+<button class="btn btn-primary me-2" @onclick="DoSearch">Søg</button>
+<button class="btn btn-secondary" @onclick="ToggleJsonView">
+    @(showJson ? "Vis pæne filer" : "Vis JSON")
+</button>
 
 @if (results != null)
 {
-    <h3>Resultater:</h3>
-    <ul>
-        @foreach (var r in results.documentHits)
-        {
-            <li>@r.document.mUrl (Hits: @r.noOfHits)</li>
-        }
-    </ul>
+    @if (showJson)
+    {
+        <h3>Resultater (JSON-format):</h3>
+        <pre>@System.Text.Json.JsonSerializer.Serialize(results, new System.Text.Json.JsonSerializerOptions { WriteIndented = true })</pre>
+    }
+    else
+    {
+        <h3>Resultater:</h3>
+        <ul class="list-group">
+            @foreach (var r in results.documentHits)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    @System.IO.Path.GetFileName(r.document.mUrl)
+                    <span class="badge bg-primary rounded-pill">@r.noOfHits</span>
+                </li>
+            }
+        </ul>
+    }
 }
 
 @code {
     private string query = "";
     private SearchResponse? results;
+    private bool showJson = false;
 
     private async Task DoSearch()
     {
         try
         {
-            results = await Http.GetFromJsonAsync<SearchResponse>($"api/search?query={query}");
+            var encodedQuery = Uri.EscapeDataString(query);
+            results = await Http.GetFromJsonAsync<SearchResponse>(
+                $"api/Search?q={encodedQuery}&max=10");
         }
         catch (Exception ex)
         {
             Console.Error.WriteLine(ex);
         }
+    }
+
+    private void ToggleJsonView()
+    {
+        showJson = !showJson;
     }
 }
