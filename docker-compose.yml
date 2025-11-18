@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+
+  blazor:
+    build: ./Blazor
+    container_name: blazor-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - searchapi
+
+  searchapi:
+    build:
+      context: .
+      dockerfile: SearchApi/Dockerfile
+    container_name: search-api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+
+  indexer:
+    build:
+      context: .
+      dockerfile: indexer/Dockerfile
+    container_name: indexer-worker
+    depends_on:
+      - searchapi
+
+
+  loadbalancer:
+    build: ./LoadBalancerAPI
+    container_name: loadbalancer
+    ports:
+      - "9000:9090"
+    depends_on:
+      - searchapi
+      
+  consolesearch:
+    build:
+      context: .
+      dockerfile: ConsoleSearch/Dockerfile
+    container_name: consolesearch
+    ports:
+      - "6000:8080"
+    volumes:
+      - ./data:/app/data
