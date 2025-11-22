@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowBlazor",
         policy => policy
-            .WithOrigins("http://localhost:5243") // Porten hvor din Blazor-app kører
+            .WithOrigins("http://localhost:8080") // Porten hvor din Blazor-app kører
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
@@ -26,10 +26,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-app.UseDefaultFiles();
-app.UseStaticFiles();
-app.MapFallbackToFile("index.html");
 
 // Swagger middleware
 app.UseSwagger();
@@ -41,6 +37,12 @@ app.UseSwaggerUI(c =>
 
 // 👇 Brug CORS
 app.UseCors("AllowBlazor");
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.MapFallbackToFile("index.html");
+
+
 
 app.MapControllers();
 

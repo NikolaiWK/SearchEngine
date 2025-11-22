@@ -1,8 +1,10 @@
 ﻿using System;
 namespace Shared
 {
-    public class Paths
+    public static class Paths
     {
-        public static string DATABASE = @"/Users/niko/SearchEngine/SearchEngine/seData copy/medium.db";
+        public static string DATABASE =>
+            Environment.GetEnvironmentVariable("DATABASE_PATH")
+            ?? throw new Exception("DATABASE_PATH not set");
     }
 }

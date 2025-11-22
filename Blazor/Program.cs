@@ -10,7 +10,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 // HttpClient peger på dit API (porten skal matche din backend)
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("http://localhost:5169/") 
+    BaseAddress = new Uri("http://localhost:5000/")
 });
 
 await builder.Build().RunAsync();

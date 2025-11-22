@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
 
   blazor:
@@ -9,6 +7,10 @@ services:
       - "8080:80"
     depends_on:
       - searchapi
+    volumes:
+      - ./seData_copy/medium.db:/app/data/medium.db
+    environment:
+      - DATABASE_PATH=/app/data/medium.db
 
   searchapi:
     build:
@@ -17,9 +19,10 @@ services:
     container_name: search-api
     ports:
       - "5000:8080"
+    volumes:
+      - ./seData_copy/medium.db:/app/data/medium.db
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-
+      - DATABASE_PATH=/app/data/medium.db
 
   indexer:
     build:
@@ -28,7 +31,12 @@ services:
     container_name: indexer-worker
     depends_on:
       - searchapi
-
+    volumes:
+      - ./seData_copy/medium:/app/input
+      - ./seData_copy/medium.db:/app/data/medium.db
+    environment:
+      - DATABASE_PATH=/app/data/medium.db
+      - INPUT_FOLDER=/app/input
 
   loadbalancer:
     build: ./LoadBalancerAPI
@@ -37,7 +45,7 @@ services:
       - "9000:9090"
     depends_on:
       - searchapi
-      
+
   consolesearch:
     build:
       context: .
@@ -46,4 +54,6 @@ services:
     ports:
       - "6000:8080"
     volumes:
-      - ./data:/app/data
+      - ./seData_copy/medium.db:/app/data/medium.db
+    environment:
+    - DATABASE_PATH=/app/data/medium.db

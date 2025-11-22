@@ -8,26 +8,51 @@ namespace Indexer
 {
     public class App
     {
+        private readonly string _dbPath;
+        private readonly string _inputFolder;
+
+        public App(string dbPath, string inputFolder)
+        {
+            _dbPath = dbPath;
+            _inputFolder = inputFolder;
+        }
+
         public void Run()
         {
-            DatabaseSqlite db = new DatabaseSqlite(Paths.DATABASE);
-            Crawler crawler = new Crawler(db);
+            Console.WriteLine("Indexer starting...");
+            Console.WriteLine($"Using database: {_dbPath}");
+            Console.WriteLine($"Using input folder: {_inputFolder}");
 
-            var root = new DirectoryInfo(Config.FOLDER);
+            // Opret database
+            var db = new DatabaseSqlite(_dbPath);
 
+            // Opret crawler
+            var crawler = new Crawler(db);
+
+            // Input mappe
+            var root = new DirectoryInfo(_inputFolder);
+
+            if (!root.Exists)
+            {
+                Console.WriteLine($"INPUT FOLDER DOES NOT EXIST: {_inputFolder}");
+                return;
+            }
+
+            // Kør indexing
             DateTime start = DateTime.Now;
+
             crawler.IndexFilesIn(root, new List<string> { ".txt" });
+
             TimeSpan used = DateTime.Now - start;
 
-            Console.WriteLine($"DONE! used {used.TotalMilliseconds} ms");
+            Console.WriteLine($"DONE! Used {used.TotalMilliseconds} ms");
 
-            var all = db.GetAllWords(); // Dictionary<string,int> med ord -> antal forekomster
-            
+            var all = db.GetAllWords();
+
             Console.WriteLine($"Indexed {db.DocumentCounts} documents");
             Console.WriteLine($"Number of different words: {all.Count}");
 
-            
-            // Spørg brugeren hvor mange ord der skal vises
+            // Top ord
             Console.Write("How many of the most frequent words do you want to see? ");
             if (!int.TryParse(Console.ReadLine(), out int count) || count <= 0)
             {
@@ -35,11 +60,9 @@ namespace Indexer
                 count = 10;
             }
 
-                    
             foreach (var p in all.OrderBy(x => x.Value).Take(count))
             {
                 Console.WriteLine($"<{p.Key}> - {p.Value} - {db.CountTotalWords(p.Value)}");
-                
             }
         }
     }

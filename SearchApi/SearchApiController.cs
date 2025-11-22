@@ -11,7 +11,14 @@ public class SearchController : ControllerBase
 
     public SearchController()
     {
+            var dbPath = Environment.GetEnvironmentVariable("DATABASE_PATH");
+            if (string.IsNullOrEmpty(dbPath))
+            {
+                throw new Exception("DATABASE_PATH is not set!");
+            }
         _searchLogic = new SearchLogic(new DatabaseSqlite());
+
+
     }
 
     [HttpGet]

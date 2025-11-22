@@ -5,18 +5,27 @@ using Microsoft.Data.Sqlite;
 namespace Indexer
 {
     class Program
+{
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        var dbPath = Environment.GetEnvironmentVariable("DATABASE_PATH");
+        var folder = Environment.GetEnvironmentVariable("INPUT_FOLDER");
+
+        if (string.IsNullOrEmpty(dbPath))
         {
-            
-            new App().Run();
-
-            //new Renamer().Crawl(new DirectoryInfo(@"/Users/ole/data"));
-
-
+            Console.WriteLine("DATABASE_PATH is not set!");
+            return;
         }
 
-        
-        
+        if (string.IsNullOrEmpty(folder))
+        {
+            Console.WriteLine("INPUT_FOLDER is not set!");
+            return;
+        }
+
+        new App(dbPath, folder).Run();
     }
 }
+}
+        
+        
